@@ -3,15 +3,42 @@
   "type": "module",
   "version": "0.0.1",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.0.0 <25.0.0",
+    "pnpm": ">=9.0.0"
   },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "preinstall": "node -e \"const v=parseInt(process.version.slice(1));if(v<22||v>=25){console.error(\"Node 22 o 24 requerido\");process.exit(1)}\"",
+    "check": "astro check",
+    "lint": "eslint src --ext .astro,.ts,.tsx --report-unused-disable-directives",
+    "lint:fix": "eslint src --ext .astro,.ts,.tsx --fix",
+    "format": "prettier --write \"src/**/*.{astro,ts,tsx,css}\"",
+    "format:check": "prettier --check \"src/**/*.{astro,ts,tsx,css}\"",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "astro": "^6.3.3"
+    "@astrojs/react": "4.2.1",
+    "@astrojs/sitemap": "3.3.0",
+    "@tailwindcss/vite": "4.1.5",
+    "astro": "^5.7.1",
+    "clsx": "2.1.1",
+    "motion": "^12.39.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "tailwindcss": "4.1.5"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.4",
+    "@types/react-dom": "19.1.5",
+    "@typescript-eslint/eslint-plugin": "8.32.0",
+    "@typescript-eslint/parser": "8.32.0",
+    "eslint": "9.25.1",
+    "eslint-plugin-astro": "1.3.1",
+    "prettier": "3.5.3",
+    "prettier-plugin-astro": "0.14.1",
+    "prettier-plugin-tailwindcss": "0.6.11"
   }
 }

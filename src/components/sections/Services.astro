@@ -1,0 +1,20 @@
+---
+/**
+ * src/components/sections/Services.astro
+ *
+ * Wrapper SSG — resuelve datos en build time y los inyecta
+ * al island ServicesSlider como props. Fiel a la regla:
+ * "UI NO importa data/ directamente → datos llegan como props desde pages/"
+ */
+import { dataStore } from '@/data'
+import ServicesSlider from '@/components/islands/ServicesSlider'
+
+const services = await dataStore.services.getAll()
+---
+
+<section
+  id="servicios"
+  style="background: var(--color-ink-950); border-top: 1px solid var(--color-border);"
+>
+  <ServicesSlider services={services} client:visible />
+</section>

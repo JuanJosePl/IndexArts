@@ -1,0 +1,48 @@
+---
+import type { SeoProps } from '@/types'
+
+const {
+  title = 'IndexArts — Diseño & Automatización para negocios colombianos',
+  description = 'Webs que venden, automatizaciones que trabajan de noche. Para negocios en Barranquilla y Colombia.',
+  ogImage = '/images/og/og-default.jpg',
+  noIndex = false,
+} = Astro.props as SeoProps
+
+const siteUrl = import.meta.env.PUBLIC_SITE_URL || 'https://indexarts.co'
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString()
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'IndexArts',
+  description,
+  url: siteUrl,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Barranquilla',
+    addressRegion: 'Atlántico',
+    addressCountry: 'CO',
+  },
+  areaServed: 'CO',
+  priceRange: '$$',
+  serviceType: ['Diseño Web', 'Automatización', 'Marketing Digital'],
+}
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+{noIndex && <meta name="robots" content="noindex, nofollow" />}
+<meta property="og:type"        content="website" />
+<meta property="og:url"         content={canonicalUrl} />
+<meta property="og:title"       content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image"       content={`${siteUrl}${ogImage}`} />
+<meta property="og:locale"      content="es_CO" />
+<meta property="og:site_name"   content="IndexArts" />
+<meta name="twitter:card"        content="summary_large_image" />
+<meta name="twitter:title"       content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image"       content={`${siteUrl}${ogImage}`} />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

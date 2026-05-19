@@ -1,0 +1,32 @@
+---
+import '@/styles/global.css'
+import Seo from '@/components/seo/Seo.astro'
+import type { SeoProps } from '@/types'
+type Props = SeoProps
+const props = Astro.props
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <Seo {...props} />
+    <!--
+      Fuentes: display=swap garantiza texto visible durante la carga.
+      Self-hosting: ver README "Fuentes self-hosted" → public/fonts/
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=Syne:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @font-face { font-family: 'Fraunces'; font-display: swap; src: local('Fraunces'); }
+      @font-face { font-family: 'Syne';     font-display: swap; src: local('Syne'); }
+    </style>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

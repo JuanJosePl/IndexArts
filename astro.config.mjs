@@ -1,5 +1,21 @@
-// @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig } from 'astro/config'
+import react from '@astrojs/react'
+import sitemap from '@astrojs/sitemap'
+import tailwindcss from '@tailwindcss/vite'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
-// https://astro.build/config
-export default defineConfig({});
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+export default defineConfig({
+  site: 'https://indexarts.co',
+  integrations: [react(), sitemap()],
+  output: 'static',
+  image: { remotePatterns: [] },
+  vite: {
+    plugins: [tailwindcss()],
+    resolve: {
+      alias: { '@': path.resolve(__dirname, './src') },
+    },
+  },
+})

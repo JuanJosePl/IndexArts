@@ -1,0 +1,62 @@
+---
+/**
+ * src/components/sections/Stats.astro
+ *
+ * Sección de transición dark→light con casos reales animados.
+ * Obtiene transitionStats del dataStore en build time (SSG)
+ * y los pasa como prop al island AnimatedStats.
+ *
+ * El <AnimatedStats client:visible /> de index.astro recibe stats=[]
+ * y renderiza null — esta sección es la fuente canónica de los datos.
+ */
+import { dataStore } from '@/data'
+import { copy } from '@/data/copy'
+import AnimatedStats from '@/components/islands/AnimatedStats'
+
+const stats = await dataStore.metrics.transition()
+const { stats: statsCopy } = copy
+---
+
+<section
+  id="trans"
+  style={`
+    padding: var(--section-py) var(--section-px);
+    background: linear-gradient(
+      180deg,
+      var(--color-ink-800) 0%,
+      var(--color-cream-200) 100%
+    );
+  `}
+>
+
+  <!-- Eyebrow — texto crema: la parte alta todavía es oscura -->
+  <span
+    class="font-mono text-[9px] uppercase tracking-[0.18em] inline-block mb-11 pb-1.5 reveal"
+    style="
+      color: rgba(242,237,230,0.30);
+      border-bottom: 1px solid rgba(242,237,230,0.14);
+    "
+  >
+    {statsCopy.eyebrow}
+  </span>
+
+  <!-- Island con data inyectada desde el servidor -->
+  <AnimatedStats stats={stats} client:visible />
+
+</section>
+
+<script>
+  // Reveal del eyebrow — solo afecta #trans
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('is-visible')
+          io.unobserve(e.target)
+        }
+      })
+    },
+    { threshold: 0.2 }
+  )
+  document.querySelectorAll('#trans .reveal').forEach((el) => io.observe(el))
+</script>

@@ -1,0 +1,98 @@
+/*
+ * IndexArts · global.css
+ * Tailwind CSS v4 — @import reemplaza directivas v3
+ * @theme {} es la única fuente de verdad de design tokens
+ */
+
+@import "tailwindcss";
+
+@theme {
+  --font-head: 'Fraunces', Georgia, serif;
+  --font-body: 'Syne', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-ink-950: #0C0C0C;
+  --color-ink-900: #111111;
+  --color-ink-800: #141414;
+  --color-ink-700: #1A1A1A;
+  --color-ink-600: #222222;
+
+  --color-cream-100: #F2EDE6;
+  --color-cream-200: #E8E2D9;
+  --color-cream-300: #D8D2C8;
+
+  --color-brand-red:   #C0392B;
+  --color-brand-red2:  #E74C3C;
+  --color-brand-gold:  #A8780A;
+  --color-brand-green: #0B7A45;
+
+  --width-content: 1080px;
+  --width-text:    660px;
+  --width-narrow:  520px;
+
+  --animate-fade-up:   fadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in:   fadeIn 0.6s ease both;
+  --animate-btn-aura:  btnAura 3s infinite;
+  --animate-dot-pulse: dotPulse 2.2s infinite;
+  --animate-line-grow: lineGrow 1.5s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes btnAura {
+  0%, 100% { box-shadow: 0 4px 28px rgba(192, 57, 43, 0.28); }
+  50%       { box-shadow: 0 4px 44px rgba(192, 57, 43, 0.52); }
+}
+@keyframes dotPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.5); }
+  60%       { box-shadow: 0 0 0 9px rgba(192, 57, 43, 0); }
+}
+@keyframes lineGrow {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 0.7; }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    background-color: var(--color-ink-950);
+    color: var(--color-cream-100);
+    font-family: var(--font-body);
+  }
+  ::selection {
+    background-color: color-mix(in srgb, var(--color-brand-red) 30%, transparent);
+    color: var(--color-cream-100);
+  }
+}
+
+:root {
+  --section-px: clamp(16px, 7vw, 96px);
+  --section-py: clamp(64px, 10vh, 100px);
+  --color-border:   rgba(242, 237, 230, 0.07);
+  --color-border-2: rgba(242, 237, 230, 0.14);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-left.is-visible { opacity: 1; transform: translateX(0); }

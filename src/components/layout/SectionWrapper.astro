@@ -1,0 +1,17 @@
+---
+interface Props {
+  id?: string
+  class?: string
+  as?: 'section' | 'div' | 'article'
+}
+const { id, class: className = '', as: Tag = 'section' } = Astro.props
+---
+<Tag
+  {id}
+  class={className}
+  style="padding: var(--section-py) var(--section-px);"
+>
+  <div style="max-width: var(--width-content); margin-inline: auto;">
+    <slot />
+  </div>
+</Tag>

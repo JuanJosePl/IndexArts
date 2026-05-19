@@ -1,0 +1,19 @@
+---
+/**
+ * src/components/sections/Projects.astro
+ *
+ * Wrapper SSG — resuelve proyectos en build time e inyecta
+ * como props al island ProjectsParallax.
+ */
+import { dataStore } from '@/data'
+import ProjectsParallax from '@/components/islands/ProjectsParallax'
+
+const projects = await dataStore.projects.getAll()
+---
+
+<section
+  id="proyectos"
+  style="background: var(--color-ink-950); border-top: 1px solid var(--color-border);"
+>
+  <ProjectsParallax projects={projects} client:visible />
+</section>

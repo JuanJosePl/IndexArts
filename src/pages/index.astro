@@ -1,17 +1,46 @@
 ---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Nav from '@/components/layout/Nav.astro'
+import Footer from '@/components/layout/Footer.astro'
+import Hero from '@/components/sections/Hero.astro'
+import Pain from '@/components/sections/Pain.astro'
+import Stats from '@/components/sections/Stats.astro'
+import Services from '@/components/sections/Services.astro'
+import Differential from '@/components/sections/Differential.astro'
+import FinalCta from '@/components/sections/FinalCta.astro'
+import RoiCalculator from '@/components/islands/RoiCalculator'
+import AnimatedStats from '@/components/islands/AnimatedStats'
+import StickyWhatsApp from '@/components/islands/StickyWhatsApp'
+import Projects from '@/components/sections/Projects.astro'
+import { dataStore } from '@/data'
+
+// Los datos se resuelven en build time (SSG) — las islands los reciben como props
+const sectors = await dataStore.sectors.getAll()
+const heroMetrics = await dataStore.metrics.hero()
 
 ---
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="IndexArts — Diseño & Automatización para negocios colombianos"
+  description="Webs que venden, automatizaciones que trabajan de noche, sistemas que escalan."
+>
+  <StickyWhatsApp client:load />
+  <Nav />
+  <main>
+    <Hero metrics={heroMetrics} />
+    <Pain />
+    <section
+      id="calculadora"
+      class="bg-ink-900"
+      style="border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);"
+    >
+      <RoiCalculator sectors={sectors} client:visible />
+    </section>
+    <AnimatedStats client:visible />
+    <Stats />
+    <Services />
+    <Projects />
+    <Differential />
+    <FinalCta />
+  </main>
+  <Footer />
+</BaseLayout>
