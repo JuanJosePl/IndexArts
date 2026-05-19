@@ -11,7 +11,6 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "preinstall": "node -e \"const v=parseInt(process.version.slice(1));if(v<22||v>=25){console.error(\"Node 22 o 24 requerido\");process.exit(1)}\"",
     "check": "astro check",
     "lint": "eslint src --ext .astro,.ts,.tsx --report-unused-disable-directives",
     "lint:fix": "eslint src --ext .astro,.ts,.tsx --fix",
