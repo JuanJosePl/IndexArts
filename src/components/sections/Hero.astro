@@ -1,13 +1,8 @@
 ---
 // src/components/sections/Hero.astro
-// Sección hero con scroll storytelling en 4 stages
-// Stage 0 → Eyebrow + H1 líneas 1&2
-// Stage 1 → H1 énfasis + dim (el sistema...)
-// Stage 2 → Subtítulo + CTAs
-// Stage 3 → Métricas + nota de verificación
-//
-// El canvas recibe el stage activo vía postMessage para sincronizar los efectos.
-// El indicador lateral muestra progreso + contador de stage.
+// Scroll storytelling en 2 stages:
+// Stage 0 → Eyebrow + H1 + Subtítulo + CTAs
+// Stage 1 → Métricas + nota de verificación
 
 import HeroCanvas from '@islands/HeroCanvas'
 import type { MetricItem } from '@/types'
@@ -19,8 +14,7 @@ interface Props {
 const { metrics } = Astro.props
 const { hero } = copy
 
-// Stages definidos para el scroll storytelling
-const TOTAL_STAGES = 4
+const TOTAL_STAGES = 2
 ---
 
 <section
@@ -28,58 +22,53 @@ const TOTAL_STAGES = 4
   class="hero-section"
   aria-label="Sección principal IndexArts"
 >
-  {/* Canvas multifase — island idle */}
   <HeroCanvas client:idle />
 
-  {/* ── STAGE 0: Eyebrow + H1 líneas base ─────────────────────── */}
-  <div class="hero-content" data-stage-group="0 1 2 3">
+  {/* ── Contenido sticky ── */}
+  <div class="hero-content" data-stage-group="0 1">
 
-    {/* Eyebrow — visible desde stage 0 */}
+    {/* Stage 0: Eyebrow */}
     <div class="hero-eyebrow" data-stage-visible="0">
       <span class="hero-dot" aria-hidden="true"></span>
       <span class="hero-eyebrow-text font-mono">{hero.eyebrow}</span>
     </div>
 
-    {/* H1 completo — las líneas entran por stage */}
-    <h1 class="hero-h1 font-head" aria-label={`${hero.h1.line1} ${hero.h1.line2} ${hero.h1.emphasis} ${hero.h1.dim}`}>
-
-      {/* Stage 0: líneas base */}
+    {/* Stage 0: H1 */}
+    <h1
+      class="hero-h1 font-head"
+      aria-label={`${hero.h1.line1} ${hero.h1.line2} ${hero.h1.dim}`}
+    >
       <span class="hero-line" data-stage-visible="0">
         {hero.h1.line1}
       </span>
-      <span class="hero-line" data-stage-visible="0" style="--delay: 90ms">
+      <em class="hero-line hero-emphasis" data-stage-visible="0" style="--delay: 70ms">
         {hero.h1.line2}
-      </span>
-
-      {/* Stage 1: énfasis + dim */}
-      <em class="hero-line hero-emphasis" data-stage-visible="1">
-        {hero.h1.emphasis}
       </em>
-      <span class="hero-line hero-dim" data-stage-visible="1" style="--delay: 90ms">
+      <span class="hero-line hero-dim" data-stage-visible="0" style="--delay: 140ms">
         {hero.h1.dim}
       </span>
     </h1>
 
-    {/* Stage 2: Subtítulo + CTAs */}
-    <p class="hero-subtitle font-body" data-stage-visible="2">
+    {/* Stage 0: Subtítulo + CTAs */}
+    <p class="hero-subtitle font-body" data-stage-visible="0" style="--delay: 210ms">
       {hero.subtitle}
       {' '}
       <strong class="hero-subtitle-strong">{hero.subtitleStrong}</strong>
     </p>
 
-    <div class="hero-ctas" data-stage-visible="2" style="--delay: 120ms">
+    <div class="hero-ctas" data-stage-visible="0" style="--delay: 280ms">
       <a href={hero.ctaPrimaryHref} class="hero-cta-primary font-body">
         {hero.ctaPrimary}
       </a>
       <a href={hero.ctaGhostHref} class="hero-cta-ghost font-body">
-        {hero.ctaGhost} <span aria-hidden="true">→</span>
+        {hero.ctaGhost}
       </a>
     </div>
 
-    {/* Stage 3: Métricas + nota */}
+    {/* Stage 1: Métricas */}
     <div
       class="hero-metrics"
-      data-stage-visible="3"
+      data-stage-visible="1"
       aria-label="Resultados verificados"
     >
       {metrics.map((m) => (
@@ -90,23 +79,24 @@ const TOTAL_STAGES = 4
       ))}
     </div>
 
-    <p class="hero-note font-mono" data-stage-visible="3" style="--delay: 120ms">
+    <p class="hero-note font-mono" data-stage-visible="1" style="--delay: 100ms">
       {hero.metricsNote}
     </p>
 
   </div>
 
-  {/* ── Indicador lateral de scroll / progreso ───────────────────── */}
-  <aside class="hero-stage-indicator" aria-label="Progreso de la sección" aria-live="polite">
-
-    {/* Contador numérico */}
+  {/* ── Indicador lateral ── */}
+  <aside
+    class="hero-stage-indicator"
+    aria-label="Progreso de la sección"
+    aria-live="polite"
+  >
     <div class="stage-counter font-mono" id="stage-counter">
       <span class="stage-current" id="stage-current">01</span>
       <span class="stage-sep">/</span>
-      <span class="stage-total">{String(TOTAL_STAGES).padStart(2,'0')}</span>
+      <span class="stage-total">{String(TOTAL_STAGES).padStart(2, '0')}</span>
     </div>
 
-    {/* Barra de pips verticales */}
     <div class="stage-pips" role="list" aria-label="Secciones del hero">
       {Array.from({ length: TOTAL_STAGES }).map((_, i) => (
         <button
@@ -121,22 +111,18 @@ const TOTAL_STAGES = 4
       ))}
     </div>
 
-    {/* Etiqueta de stage */}
     <div class="stage-labels" id="stage-labels">
-      <span class="stage-label active font-mono" data-label="0">Inicio</span>
-      <span class="stage-label font-mono" data-label="1">Sistema</span>
-      <span class="stage-label font-mono" data-label="2">Solución</span>
-      <span class="stage-label font-mono" data-label="3">Resultados</span>
+      <span class="stage-label active font-mono" data-label="0">Propuesta</span>
+      <span class="stage-label font-mono" data-label="1">Resultados</span>
     </div>
 
-    {/* Hint de scroll — desaparece en el último stage */}
     <div class="scroll-hint" id="scroll-hint" aria-hidden="true">
       <div class="scroll-line"></div>
       <span class="font-mono">scroll</span>
     </div>
   </aside>
 
-  {/* ── Barra de progreso inferior ────────────────────────────────── */}
+  {/* ── Barra de progreso inferior ── */}
   <div class="hero-progress-bar" aria-hidden="true">
     <div class="progress-fill" id="hero-progress-fill"></div>
   </div>
@@ -144,16 +130,15 @@ const TOTAL_STAGES = 4
 </section>
 
 <style>
-  /* ── Contenedor ──────────────────────────────────────────────────── */
+  /* ── Contenedor ── */
   .hero-section {
     position: relative;
-    /* 4 stages × 100vh — el usuario hace scroll dentro */
-    min-height: 400svh;
+    min-height: 200svh; /* 2 stages × 100svh */
     background-color: var(--color-ink-950, #0C0C0C);
     isolation: isolate;
   }
 
-  /* ── Contenido: sticky dentro del scroll ─────────────────────────── */
+  /* ── Contenido sticky ── */
   .hero-content {
     position: sticky;
     top: 0;
@@ -165,12 +150,12 @@ const TOTAL_STAGES = 4
     overflow: hidden;
   }
 
-  /* ── Eyebrow ─────────────────────────────────────────────────────── */
+  /* ── Eyebrow ── */
   .hero-eyebrow {
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    margin-bottom: 2.25rem;
+    margin-bottom: 2rem;
     opacity: 0;
     transform: translateY(14px);
     transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
@@ -179,39 +164,37 @@ const TOTAL_STAGES = 4
     opacity: 1;
     transform: translateY(0);
   }
-
   .hero-dot {
     display: block;
-    width: 6px; height: 6px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: var(--color-brand-red, #C0392B);
     flex-shrink: 0;
     animation: dot-pulse 2s ease-in-out infinite;
   }
   @keyframes dot-pulse {
-    0%,100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.5); }
-    50%      { box-shadow: 0 0 0 6px rgba(192,57,43,0); }
+    0%, 100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.5); }
+    50%       { box-shadow: 0 0 0 6px rgba(192,57,43,0); }
   }
-
   .hero-eyebrow-text {
-    font-size: clamp(0.62rem, 1.1vw, 0.76rem);
+    font-size: clamp(0.6rem, 1.1vw, 0.74rem);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--color-cream-100, #F2EDE6) 42%, transparent);
   }
 
-  /* ── H1 ──────────────────────────────────────────────────────────── */
+  /* ── H1 ── */
   .hero-h1 {
     display: flex;
     flex-direction: column;
-    gap: 0.08em;
+    gap: 0.06em;
     margin: 0 0 1.75rem;
-    max-width: 840px;
+    max-width: 860px;
   }
-
   .hero-line {
     display: block;
-    font-size: clamp(2.4rem, 6.5vw, 5.2rem);
+    font-size: clamp(2.2rem, 6vw, 5rem);
     font-weight: 300;
     line-height: 1.05;
     color: var(--color-cream-100, #F2EDE6);
@@ -227,30 +210,30 @@ const TOTAL_STAGES = 4
     opacity: 1;
     transform: translateY(0);
   }
-
   .hero-emphasis {
     font-style: italic;
     font-weight: 400;
     color: var(--color-brand-red, #C0392B);
   }
-
   .hero-dim {
-    font-size: clamp(1.75rem, 4.6vw, 3.7rem);
-    color: color-mix(in srgb, var(--color-cream-100, #F2EDE6) 30%, transparent);
+    font-size: clamp(1.3rem, 3.2vw, 2.6rem);
+    color: color-mix(in srgb, var(--color-cream-100, #F2EDE6) 34%, transparent);
     font-weight: 300;
-    white-space: pre-line;
+    margin-top: 0.25em;
   }
 
-  /* ── Subtítulo ───────────────────────────────────────────────────── */
+  /* ── Subtítulo ── */
   .hero-subtitle {
-    font-size: clamp(0.9rem, 1.55vw, 1.08rem);
+    font-size: clamp(0.9rem, 1.5vw, 1.05rem);
     line-height: 1.75;
     color: color-mix(in srgb, var(--color-cream-100, #F2EDE6) 56%, transparent);
     max-width: 560px;
-    margin: 0 0 2.5rem;
+    margin: 0 0 2.25rem;
     opacity: 0;
     transform: translateY(18px);
     transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
+    transition-delay: var(--delay, 0ms);
+    white-space: pre-line;
   }
   .hero-subtitle.is-visible {
     opacity: 1;
@@ -259,13 +242,14 @@ const TOTAL_STAGES = 4
   .hero-subtitle-strong {
     color: color-mix(in srgb, var(--color-cream-100, #F2EDE6) 80%, transparent);
     font-weight: 500;
+    white-space: pre-line;
   }
 
-  /* ── CTAs ────────────────────────────────────────────────────────── */
+  /* ── CTAs ── */
   .hero-ctas {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.85rem;
+    gap: 0.75rem;
     margin-bottom: 3.5rem;
     align-items: center;
     opacity: 0;
@@ -279,21 +263,20 @@ const TOTAL_STAGES = 4
     opacity: 1;
     transform: translateY(0);
   }
-
   .hero-cta-primary {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.82rem 1.6rem;
+    padding: 0.85rem 1.6rem;
     background: var(--color-brand-red, #C0392B);
     color: var(--color-cream-100, #F2EDE6);
-    font-size: clamp(0.8rem, 1.25vw, 0.9rem);
+    font-size: clamp(0.8rem, 1.2vw, 0.9rem);
     font-weight: 500;
     letter-spacing: 0.01em;
     text-decoration: none;
     border: 1px solid transparent;
     position: relative;
     overflow: hidden;
+    min-height: 44px; /* touch target */
     transition: box-shadow 0.22s ease;
   }
   .hero-cta-primary::after {
@@ -308,17 +291,16 @@ const TOTAL_STAGES = 4
   .hero-cta-primary:hover {
     box-shadow: 0 0 28px color-mix(in srgb, var(--color-brand-red, #C0392B) 35%, transparent);
   }
-  .hero-cta-primary span { position: relative; z-index: 1; }
-
   .hero-cta-ghost {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    padding: 0.82rem 1.4rem;
+    padding: 0.85rem 1.4rem;
     border: 1px solid color-mix(in srgb, var(--color-cream-100, #F2EDE6) 17%, transparent);
     color: color-mix(in srgb, var(--color-cream-100, #F2EDE6) 62%, transparent);
-    font-size: clamp(0.8rem, 1.25vw, 0.9rem);
+    font-size: clamp(0.8rem, 1.2vw, 0.9rem);
     text-decoration: none;
+    min-height: 44px; /* touch target */
     transition: border-color 0.22s ease, color 0.22s ease;
   }
   .hero-cta-ghost:hover {
@@ -326,7 +308,7 @@ const TOTAL_STAGES = 4
     color: var(--color-cream-100, #F2EDE6);
   }
 
-  /* ── Métricas ────────────────────────────────────────────────────── */
+  /* ── Métricas ── */
   .hero-metrics {
     display: flex;
     flex-wrap: wrap;
@@ -339,8 +321,10 @@ const TOTAL_STAGES = 4
     transform: translateY(16px);
     transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
   }
-  .hero-metrics.is-visible { opacity: 1; transform: translateY(0); }
-
+  .hero-metrics.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
   .hero-metric {
     display: flex;
     flex-direction: column;
@@ -362,19 +346,19 @@ const TOTAL_STAGES = 4
     line-height: 1.4;
   }
 
-  /* ── Nota ────────────────────────────────────────────────────────── */
+  /* ── Nota ── */
   .hero-note {
     font-size: 0.63rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: color-mix(in srgb, var(--color-cream-100, #F2EDE6) 20%, transparent);
+    color: color-mix(in srgb, var(--color-cream-100, #F2EDE6) 22%, transparent);
     opacity: 0;
     transition: opacity 0.7s ease;
     transition-delay: var(--delay, 0ms);
   }
   .hero-note.is-visible { opacity: 1; }
 
-  /* ── Indicador lateral ────────────────────────────────────────────── */
+  /* ── Indicador lateral ── */
   .hero-stage-indicator {
     position: fixed;
     right: clamp(1rem, 3vw, 2.5rem);
@@ -386,13 +370,11 @@ const TOTAL_STAGES = 4
     gap: 1rem;
     z-index: 50;
     pointer-events: auto;
-    /* Oculto hasta que el hero sea visible */
     opacity: 0;
     transition: opacity 0.5s ease;
   }
   .hero-stage-indicator.is-active { opacity: 1; }
 
-  /* Contador */
   .stage-counter {
     display: flex;
     flex-direction: column;
@@ -419,7 +401,6 @@ const TOTAL_STAGES = 4
     line-height: 1;
   }
 
-  /* Pips verticales */
   .stage-pips {
     display: flex;
     flex-direction: column;
@@ -434,32 +415,27 @@ const TOTAL_STAGES = 4
     padding: 0;
     cursor: pointer;
     position: relative;
-    transition: background 0.3s ease;
     overflow: hidden;
+    transition: background 0.3s ease;
   }
   .stage-pip[aria-current='true'] {
     background: color-mix(in srgb, var(--color-cream-100, #F2EDE6) 18%, transparent);
   }
   .pip-fill {
     position: absolute;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 0%;
     background: var(--color-brand-red, #C0392B);
     transition: height 0.4s cubic-bezier(0.16,1,0.3,1);
   }
   .stage-pip[aria-current='true'] .pip-fill,
-  .stage-pip.is-done .pip-fill {
-    height: 100%;
-  }
-  .stage-pip.is-active .pip-fill {
-    /* height controlado por JS según sub-progreso del stage */
-  }
+  .stage-pip.is-done .pip-fill { height: 100%; }
   .stage-pip:hover {
     background: color-mix(in srgb, var(--color-cream-100, #F2EDE6) 22%, transparent);
   }
 
-  /* Labels de stage */
   .stage-labels {
     position: relative;
     height: 1em;
@@ -485,7 +461,6 @@ const TOTAL_STAGES = 4
     color: color-mix(in srgb, var(--color-cream-100, #F2EDE6) 40%, transparent);
   }
 
-  /* Scroll hint */
   .scroll-hint {
     display: flex;
     flex-direction: column;
@@ -495,22 +470,16 @@ const TOTAL_STAGES = 4
     transition: opacity 0.5s ease;
   }
   .scroll-hint.is-hidden { opacity: 0; pointer-events: none; }
-
   .scroll-line {
     width: 1px;
     height: 3rem;
-    background: linear-gradient(
-      to bottom,
-      rgba(242,237,230,0),
-      rgba(242,237,230,0.25)
-    );
+    background: linear-gradient(to bottom, rgba(242,237,230,0), rgba(242,237,230,0.25));
     animation: scroll-grow 2.2s ease-in-out infinite;
   }
   @keyframes scroll-grow {
-    0%,100% { transform: scaleY(0.3); transform-origin: top; opacity: 0.4; }
-    50%      { transform: scaleY(1);   transform-origin: top; opacity: 1;   }
+    0%, 100% { transform: scaleY(0.3); transform-origin: top; opacity: 0.4; }
+    50%       { transform: scaleY(1);   transform-origin: top; opacity: 1;   }
   }
-
   .scroll-hint span {
     font-size: 0.55rem;
     letter-spacing: 0.14em;
@@ -519,7 +488,7 @@ const TOTAL_STAGES = 4
     writing-mode: vertical-rl;
   }
 
-  /* ── Barra de progreso inferior ──────────────────────────────────── */
+  /* ── Barra de progreso ── */
   .hero-progress-bar {
     position: fixed;
     bottom: 0;
@@ -532,7 +501,6 @@ const TOTAL_STAGES = 4
     transition: opacity 0.4s ease;
   }
   .hero-progress-bar.is-active { opacity: 1; }
-
   .progress-fill {
     height: 100%;
     width: 0%;
@@ -541,43 +509,45 @@ const TOTAL_STAGES = 4
     box-shadow: 0 0 8px rgba(192,57,43,0.6);
   }
 
-  /* ── Responsive ──────────────────────────────────────────────────── */
+  /* ── Responsive ── */
   @media (max-width: 640px) {
-    .hero-metrics { gap: 0 1.5rem; }
-    .hero-ctas { flex-direction: column; align-items: flex-start; }
-    .hero-stage-indicator { right: 0.6rem; gap: 0.7rem; }
-    .stage-pip { height: 22px; }
+    .hero-metrics { gap: 0 1.25rem; }
+    .hero-ctas {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .hero-cta-primary,
+    .hero-cta-ghost {
+      justify-content: center;
+      text-align: center;
+    }
+    .hero-stage-indicator { right: 0.5rem; gap: 0.7rem; }
+    .stage-pip { height: 20px; }
     .stage-labels { display: none; }
+    .scroll-hint { display: none; }
   }
 </style>
 
 <script>
-  // ── Hero Scroll Storytelling Controller ────────────────────────────
-  // Ejecuta en el cliente. Detecta el scroll dentro del hero sticky,
-  // actualiza el stage, los elementos visibles y el indicador lateral.
-
   (() => {
-    const section    = document.getElementById('hero') as HTMLElement | null
-    const indicator  = document.querySelector('.hero-stage-indicator') as HTMLElement | null
-    const progressBar= document.querySelector('.hero-progress-bar') as HTMLElement | null
+    const section     = document.getElementById('hero') as HTMLElement | null
+    const indicator   = document.querySelector('.hero-stage-indicator') as HTMLElement | null
+    const progressBar = document.querySelector('.hero-progress-bar') as HTMLElement | null
     const progressFill= document.getElementById('hero-progress-fill') as HTMLElement | null
-    const scrollHint = document.getElementById('scroll-hint') as HTMLElement | null
-    const stageCurr  = document.getElementById('stage-current') as HTMLElement | null
-    const stageLabels= document.querySelectorAll<HTMLElement>('[data-label]')
-    const pips       = document.querySelectorAll<HTMLElement>('[data-pip]')
+    const scrollHint  = document.getElementById('scroll-hint') as HTMLElement | null
+    const stageCurr   = document.getElementById('stage-current') as HTMLElement | null
+    const stageLabels = document.querySelectorAll<HTMLElement>('[data-label]')
+    const pips        = document.querySelectorAll<HTMLElement>('[data-pip]')
 
     if (!section) return
 
-    const TOTAL_STAGES = 4
-
+    const TOTAL_STAGES = 2
     let currentStage = -1
 
-    // Elementos por stage
     const getEls = (stage: number) =>
       section.querySelectorAll<HTMLElement>(`[data-stage-visible="${stage}"]`)
 
     const showStage = (stage: number) => {
-      // Muestra todos los elementos hasta el stage actual (inclusive)
       for (let s = 0; s < TOTAL_STAGES; s++) {
         getEls(s).forEach(el => {
           if (s <= stage) el.classList.add('is-visible')
@@ -587,30 +557,24 @@ const TOTAL_STAGES = 4
     }
 
     const updateIndicator = (stage: number, subProgress: number) => {
-      // Contador
-      if (stageCurr) {
-        stageCurr.textContent = String(stage + 1).padStart(2, '0')
-      }
+      if (stageCurr) stageCurr.textContent = String(stage + 1).padStart(2, '0')
 
-      // Labels
       stageLabels.forEach(lbl => {
         lbl.classList.toggle('active', lbl.dataset.label === String(stage))
       })
 
-      // Pips
       pips.forEach((pip, i) => {
         pip.setAttribute('aria-current', i === stage ? 'true' : 'false')
         pip.classList.toggle('is-done', i < stage)
         pip.classList.toggle('is-active', i === stage)
         const fill = pip.querySelector<HTMLElement>('.pip-fill')
         if (fill) {
-          if (i < stage)       fill.style.height = '100%'
+          if (i < stage)        fill.style.height = '100%'
           else if (i === stage) fill.style.height = `${subProgress * 100}%`
           else                  fill.style.height = '0%'
         }
       })
 
-      // Scroll hint — ocultar en último stage
       if (scrollHint) {
         scrollHint.classList.toggle('is-hidden', stage === TOTAL_STAGES - 1)
       }
@@ -618,53 +582,40 @@ const TOTAL_STAGES = 4
 
     const onScroll = () => {
       if (!section) return
-
       const rect     = section.getBoundingClientRect()
       const sectionH = section.offsetHeight
       const vh       = window.innerHeight
-      // scrolled: qué tanto hemos bajado dentro del hero (0 = top, 1 = bottom)
       const scrolled = Math.max(0, Math.min(1, -rect.top / (sectionH - vh)))
 
-      // Stage: 0..TOTAL_STAGES-1 según el progreso
       const totalProgress = scrolled * TOTAL_STAGES
-      const stage    = Math.min(Math.floor(totalProgress), TOTAL_STAGES - 1)
-      const subProg  = totalProgress % 1   // progreso dentro del stage actual
+      const stage   = Math.min(Math.floor(totalProgress), TOTAL_STAGES - 1)
+      const subProg = totalProgress % 1
 
-      // ¿El hero está en el viewport?
       const inView = rect.top < vh && rect.bottom > 0
       indicator?.classList.toggle('is-active', inView)
       progressBar?.classList.toggle('is-active', inView)
 
-      // Progreso barra inferior
-      if (progressFill) {
-        progressFill.style.width = `${scrolled * 100}%`
-      }
+      if (progressFill) progressFill.style.width = `${scrolled * 100}%`
 
-      // Solo actualizar si el stage cambió
       if (stage !== currentStage) {
         currentStage = stage
         showStage(stage)
-
-        // Notificar al canvas via postMessage
         window.postMessage({ type: 'hero-stage', stage }, '*')
       }
 
       updateIndicator(stage, subProg)
     }
 
-    // Pip clicks — scroll al stage correspondiente
     pips.forEach((pip, i) => {
       pip.addEventListener('click', () => {
         if (!section) return
         const sectionH = section.offsetHeight
         const vh       = window.innerHeight
         const stageH   = (sectionH - vh) / TOTAL_STAGES
-        const targetY  = section.offsetTop + stageH * i
-        window.scrollTo({ top: targetY, behavior: 'smooth' })
+        window.scrollTo({ top: section.offsetTop + stageH * i, behavior: 'smooth' })
       })
     })
 
-    // Init
     showStage(0)
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
