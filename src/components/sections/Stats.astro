@@ -1,13 +1,6 @@
 ---
 /**
  * src/components/sections/Stats.astro
- *
- * Sección de transición dark→light con casos reales animados.
- * Obtiene transitionStats del dataStore en build time (SSG)
- * y los pasa como prop al island AnimatedStats.
- *
- * El <AnimatedStats client:visible /> de index.astro recibe stats=[]
- * y renderiza null — esta sección es la fuente canónica de los datos.
  */
 import { dataStore } from '@/data'
 import { copy } from '@/data/copy'
@@ -28,10 +21,8 @@ const { stats: statsCopy } = copy
     );
   `}
 >
-
-  <!-- Eyebrow — texto crema: la parte alta todavía es oscura -->
   <span
-    class="font-mono text-[9px] uppercase tracking-[0.18em] inline-block mb-11 pb-1.5 reveal"
+    class="reveal mb-11 inline-block pb-1.5 font-mono text-[9px] tracking-[0.18em] uppercase"
     style="
       color: rgba(242,237,230,0.30);
       border-bottom: 1px solid rgba(242,237,230,0.14);
@@ -40,13 +31,10 @@ const { stats: statsCopy } = copy
     {statsCopy.eyebrow}
   </span>
 
-  <!-- Island con data inyectada desde el servidor -->
   <AnimatedStats stats={stats} client:visible />
-
 </section>
 
 <script>
-  // Reveal del eyebrow — solo afecta #trans
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((e) => {

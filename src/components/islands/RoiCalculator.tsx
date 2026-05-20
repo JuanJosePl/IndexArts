@@ -93,7 +93,7 @@ export default function RoiCalculator({ sectors = [] }: RoiCalculatorProps) {
 
         {/* ── Columna izquierda — claim + selector sector ── */}
         <div>
-          <h2
+            <h2
             style={{
               fontFamily: 'var(--font-head)',
               fontSize: 'clamp(22px, 4vw, 48px)',
@@ -103,12 +103,10 @@ export default function RoiCalculator({ sectors = [] }: RoiCalculatorProps) {
               color: 'var(--color-cream-100)',
             }}
           >
-            {c.claim.replace(c.claimEmphasis, '')}{' '}
+            {c.claim}{' '}
             <em style={{ fontStyle: 'italic', color: 'var(--color-brand-red)' }}>
               {c.claimEmphasis}
-            </em>{' '}
-            {/* la palabra "el sistema?" al final */}
-            el sistema?
+            </em>
           </h2>
 
           <p
@@ -275,17 +273,14 @@ export default function RoiCalculator({ sectors = [] }: RoiCalculatorProps) {
               color: '#fff',
               fontFamily: 'var(--font-body)',
               fontWeight: 500,
-              fontSize: '13px',
+              fontSize: 'clamp(12px, 1.3vw, 13px)',
               border: 'none',
               cursor: 'pointer',
+              minHeight: '48px',
               transition: 'background 0.2s',
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'var(--color-brand-red2)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'var(--color-brand-red)'
-            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-brand-red2)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--color-brand-red)' }}
           >
             {c.ctaCalcular}
           </button>

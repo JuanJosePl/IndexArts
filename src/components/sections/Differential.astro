@@ -1,86 +1,77 @@
 ---
 /**
  * src/components/sections/Differential.astro
- *
- * Sección "Por qué no somos otra agencia".
- * Fondo: cream (#E8E2D9) — inverso al mundo oscuro.
- * Tabla comparativa con reveal staggered por fila.
- * Promesa de garantía como cierre editorial.
- *
- * Datos: solo copy — sin props, sin dataStore.
  */
 import { copy } from '@/data/copy'
 
 const { differential: d } = copy
 ---
 
-<section
-  id="diferencial"
-  aria-label="Por qué IndexArts"
-  class="diff-section"
->
-
-  {/* ── Ruido de fondo — solo CSS ── */}
+<section id="diferencial" aria-label="Por qué IndexArts" class="diff-section">
   <div class="diff-noise" aria-hidden="true"></div>
 
   <div class="diff-inner">
-
-    {/* ── Eyebrow ── */}
     <div class="diff-eyebrow-row reveal">
       <span class="diff-eyebrow font-mono">{d.eyebrow}</span>
       <div class="diff-eyebrow-line" aria-hidden="true"></div>
     </div>
 
-    {/* ── Tabla ── */}
-    <div class="diff-table-wrap" role="table" aria-label="Comparativa IndexArts vs agencias típicas">
-
-      {/* Cabecera */}
+    <div
+      class="diff-table-wrap"
+      role="table"
+      aria-label="Comparativa IndexArts vs agencias típicas"
+    >
       <div class="diff-thead" role="row">
-        <div class="diff-th diff-th--aspect font-mono" role="columnheader">{d.tableHeaders.aspect}</div>
-        <div class="diff-th diff-th--others font-mono" role="columnheader">{d.tableHeaders.others}</div>
+        <div class="diff-th diff-th--aspect font-mono" role="columnheader">
+          {d.tableHeaders.aspect}
+        </div>
+        <div class="diff-th diff-th--others font-mono" role="columnheader">
+          {d.tableHeaders.others}
+        </div>
         <div class="diff-th diff-th--ours font-mono" role="columnheader">{d.tableHeaders.ours}</div>
       </div>
 
-      {/* Filas */}
-      {d.rows.map((row, i) => (
-        <div
-          class="diff-row reveal"
-          role="row"
-          style={`transition-delay: ${i * 80}ms`}
-          data-index={i}
-        >
-          {/* Aspecto */}
-          <div class="diff-cell diff-cell--aspect" role="cell">
-            <span class="diff-aspect-num font-mono">{String(i + 1).padStart(2, '0')}</span>
-            <span class="diff-aspect-label font-body">{row.aspect}</span>
-          </div>
-
-          {/* Agencias típicas */}
+      {
+        d.rows.map((row, i) => (
           <div
-            class={`diff-cell diff-cell--others ${row.othersNegative ? 'is-negative' : ''}`}
-            role="cell"
+            class="diff-row reveal"
+            role="row"
+            style={`transition-delay: ${i * 80}ms`}
+            data-index={i}
           >
-            {row.othersNegative && (
-              <span class="diff-mark diff-mark--neg" aria-hidden="true">✕</span>
-            )}
-            <span class="diff-cell-text font-body">{row.others}</span>
-          </div>
+            <div class="diff-cell diff-cell--aspect" role="cell">
+              <span class="diff-aspect-num font-mono">{String(i + 1).padStart(2, '0')}</span>
+              <span class="diff-aspect-label font-body">{row.aspect}</span>
+            </div>
 
-          {/* IndexArts */}
-          <div
-            class={`diff-cell diff-cell--ours ${row.oursPositive ? 'is-positive' : ''}`}
-            role="cell"
-          >
-            {row.oursPositive && (
-              <span class="diff-mark diff-mark--pos" aria-hidden="true">✓</span>
-            )}
-            <span class="diff-cell-text font-body">{row.ours}</span>
+            <div
+              class={`diff-cell diff-cell--others ${row.othersNegative ? 'is-negative' : ''}`}
+              role="cell"
+            >
+              {row.othersNegative && (
+                <span class="diff-mark diff-mark--neg" aria-hidden="true">
+                  ✕
+                </span>
+              )}
+              <span class="diff-cell-text font-body">{row.others}</span>
+            </div>
+
+            <div
+              class={`diff-cell diff-cell--ours ${row.oursPositive ? 'is-positive' : ''}`}
+              role="cell"
+            >
+              {row.oursPositive && (
+                <span class="diff-mark diff-mark--pos" aria-hidden="true">
+                  ✓
+                </span>
+              )}
+              <span class="diff-cell-text font-body">{row.ours}</span>
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      }
     </div>
 
-    {/* ── Promesa de garantía ── */}
     <blockquote class="diff-promise reveal" style="transition-delay: 480ms;">
       <div class="diff-promise-bar" aria-hidden="true"></div>
       <div class="diff-promise-inner">
@@ -94,22 +85,19 @@ const { differential: d } = copy
         <cite class="diff-promise-cite font-mono">— IndexArts · Barranquilla, Colombia</cite>
       </div>
     </blockquote>
-
   </div>
 </section>
 
 <style>
-  /* ── Sección ──────────────────────────────────────────────────────────────── */
   .diff-section {
     position: relative;
-    background-color: var(--color-cream-200, #E8E2D9);
+    background-color: var(--color-cream-200, #e8e2d9);
     padding: var(--section-py) var(--section-px);
-    color: #1A1A1A;
+    color: #1a1a1a;
     overflow: hidden;
     isolation: isolate;
   }
 
-  /* ── Noise overlay — SVG inline codificado ── */
   .diff-noise {
     position: absolute;
     inset: 0;
@@ -120,7 +108,6 @@ const { differential: d } = copy
     pointer-events: none;
   }
 
-  /* ── Contenedor interior ── */
   .diff-inner {
     position: relative;
     z-index: 1;
@@ -128,12 +115,11 @@ const { differential: d } = copy
     margin: 0 auto;
   }
 
-  /* ── Eyebrow row ── */
   .diff-eyebrow-row {
     display: flex;
     align-items: center;
     gap: 20px;
-    margin-bottom: clamp(44px, 7vw, 72px);
+    margin-bottom: clamp(36px, 6vw, 72px);
   }
 
   .diff-eyebrow {
@@ -154,23 +140,27 @@ const { differential: d } = copy
   }
 
   @keyframes line-grow-dark {
-    from { transform: scaleX(0); opacity: 0; }
-    to   { transform: scaleX(1); opacity: 1; }
+    from {
+      transform: scaleX(0);
+      opacity: 0;
+    }
+    to {
+      transform: scaleX(1);
+      opacity: 1;
+    }
   }
 
-  /* ── Tabla ── */
   .diff-table-wrap {
     display: flex;
     flex-direction: column;
-    border: 1px solid rgba(26, 26, 26, 0.10);
+    border: 1px solid rgba(26, 26, 26, 0.1);
   }
 
-  /* Cabecera */
   .diff-thead {
     display: grid;
     grid-template-columns: 1fr 1.4fr 1.4fr;
     background-color: rgba(26, 26, 26, 0.04);
-    border-bottom: 1px solid rgba(26, 26, 26, 0.10);
+    border-bottom: 1px solid rgba(26, 26, 26, 0.1);
   }
 
   .diff-th {
@@ -182,16 +172,15 @@ const { differential: d } = copy
   }
 
   .diff-th--others {
-    border-left: 1px solid rgba(26, 26, 26, 0.10);
+    border-left: 1px solid rgba(26, 26, 26, 0.1);
   }
 
   .diff-th--ours {
-    border-left: 1px solid rgba(26, 26, 26, 0.10);
-    color: var(--color-brand-red, #C0392B);
+    border-left: 1px solid rgba(26, 26, 26, 0.1);
+    color: var(--color-brand-red, #c0392b);
     opacity: 0.75;
   }
 
-  /* Filas */
   .diff-row {
     display: grid;
     grid-template-columns: 1fr 1.4fr 1.4fr;
@@ -202,19 +191,19 @@ const { differential: d } = copy
       transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .diff-row:last-child { border-bottom: none; }
-
+  .diff-row:last-child {
+    border-bottom: none;
+  }
   .diff-row:hover {
     background-color: rgba(26, 26, 26, 0.025);
   }
 
-  /* Celdas */
   .diff-cell {
-    padding: clamp(14px, 2.5vw, 22px) 18px;
+    padding: clamp(12px, 2vw, 22px) clamp(12px, 2vw, 18px);
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: clamp(12px, 1.3vw, 14px);
+    font-size: clamp(11px, 1.2vw, 14px);
     line-height: 1.55;
     color: rgba(26, 26, 26, 0.7);
   }
@@ -228,7 +217,6 @@ const { differential: d } = copy
   .diff-cell--others {
     border-left: 1px solid rgba(26, 26, 26, 0.08);
   }
-
   .diff-cell--ours {
     border-left: 1px solid rgba(26, 26, 26, 0.08);
   }
@@ -236,13 +224,11 @@ const { differential: d } = copy
   .diff-cell--others.is-negative .diff-cell-text {
     color: rgba(26, 26, 26, 0.42);
   }
-
   .diff-cell--ours.is-positive .diff-cell-text {
     color: rgba(26, 26, 26, 0.85);
     font-weight: 500;
   }
 
-  /* Aspecto */
   .diff-aspect-num {
     font-size: 9px;
     color: rgba(26, 26, 26, 0.22);
@@ -253,36 +239,31 @@ const { differential: d } = copy
   }
 
   .diff-aspect-label {
-    font-size: clamp(12px, 1.3vw, 13px);
+    font-size: clamp(11px, 1.2vw, 13px);
     font-weight: 600;
     color: rgba(26, 26, 26, 0.78);
     line-height: 1.35;
   }
 
-  /* Marcas ✕ ✓ */
   .diff-mark {
     font-size: 10px;
     flex-shrink: 0;
     margin-top: 2px;
   }
-
   .diff-mark--neg {
     color: rgba(180, 60, 40, 0.38);
     font-family: var(--font-mono);
   }
-
   .diff-mark--pos {
-    color: var(--color-brand-green, #0B7A45);
+    color: var(--color-brand-green, #0b7a45);
     font-family: var(--font-mono);
   }
 
-  /* Highlight en la columna IndexArts */
   .diff-cell--ours {
     background-color: rgba(192, 57, 43, 0.018);
     position: relative;
   }
 
-  /* Línea izquierda roja en columna propia */
   .diff-cell--ours::before {
     content: '';
     position: absolute;
@@ -290,7 +271,7 @@ const { differential: d } = copy
     top: 12px;
     bottom: 12px;
     width: 2px;
-    background: var(--color-brand-red, #C0392B);
+    background: var(--color-brand-red, #c0392b);
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -299,9 +280,8 @@ const { differential: d } = copy
     opacity: 0.6;
   }
 
-  /* ── Promesa ── */
   .diff-promise {
-    margin: clamp(44px, 7vw, 72px) 0 0;
+    margin: clamp(36px, 6vw, 72px) 0 0;
     padding: 0;
     display: flex;
     align-items: flex-start;
@@ -312,10 +292,9 @@ const { differential: d } = copy
   .diff-promise-bar {
     flex-shrink: 0;
     width: 3px;
-    background: var(--color-brand-red, #C0392B);
+    background: var(--color-brand-red, #c0392b);
     align-self: stretch;
     min-height: 80px;
-    border-radius: 0;
   }
 
   .diff-promise-inner {
@@ -325,7 +304,7 @@ const { differential: d } = copy
   }
 
   .diff-promise-text {
-    font-size: clamp(18px, 2.8vw, 28px);
+    font-size: clamp(16px, 2.5vw, 28px);
     font-weight: 400;
     line-height: 1.4;
     color: rgba(26, 26, 26, 0.82);
@@ -334,11 +313,10 @@ const { differential: d } = copy
   }
 
   .diff-promise-em {
-    color: #1A1A1A;
+    color: #1a1a1a;
     font-weight: 700;
     font-style: italic;
   }
-
   .diff-promise-suffix {
     color: rgba(26, 26, 26, 0.55);
     font-style: normal;
@@ -353,14 +331,11 @@ const { differential: d } = copy
     font-style: normal;
   }
 
-  /* ── Reveal (heredado del global.css para fondo claro) ── */
-  /* Las clases .reveal / .is-visible vienen del global.css
-     pero aquí sobreescribimos el color de inicio para fondo claro */
   .diff-section .reveal {
     opacity: 0;
     transform: translateY(18px);
     transition:
-      opacity  0.72s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1),
       transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
@@ -372,13 +347,12 @@ const { differential: d } = copy
   /* ── Responsive ── */
   @media (max-width: 720px) {
     .diff-thead {
-      display: none;  /* columnas colapsan — se muestran como cards */
+      display: none;
     }
 
     .diff-row {
       grid-template-columns: 1fr;
       gap: 0;
-      padding-bottom: 0;
     }
 
     .diff-cell {
@@ -387,7 +361,12 @@ const { differential: d } = copy
 
     .diff-cell--aspect {
       background-color: rgba(26, 26, 26, 0.04);
-      padding: 14px 18px 10px;
+      padding: 14px 16px 10px;
+    }
+
+    .diff-cell--others,
+    .diff-cell--ours {
+      padding: 10px 16px 14px;
     }
 
     .diff-cell--others::before {
@@ -417,15 +396,17 @@ const { differential: d } = copy
       margin-bottom: 4px;
     }
 
-    /* Reaplicar borde izquierdo rojo en mobile solo como borde-section */
     .diff-cell--ours {
       border-left: 2px solid rgba(192, 57, 43, 0.25) !important;
+    }
+
+    .diff-promise {
+      gap: 18px;
     }
   }
 </style>
 
 <script>
-  // IntersectionObserver — activa .is-visible en los .reveal del diferencial
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -438,7 +419,5 @@ const { differential: d } = copy
     { threshold: 0.12 }
   )
 
-  document
-    .querySelectorAll('#diferencial .reveal')
-    .forEach((el) => io.observe(el))
+  document.querySelectorAll('#diferencial .reveal').forEach((el) => io.observe(el))
 </script>

@@ -1,10 +1,6 @@
 ---
 /**
  * src/components/sections/Pain.astro
- *
- * Sección "El costo real de no tener el sistema".
- * Datos desde copy (strings) — sin props adicionales.
- * Animaciones con IntersectionObserver via clases .reveal-left / .is-visible
  */
 import { copy } from '@/data/copy'
 
@@ -16,11 +12,9 @@ const { pain } = copy
   style="padding: var(--section-py) var(--section-px); background-color: var(--color-ink-950);"
 >
   <div style="max-width: 700px;">
-
     <!-- Eyebrow -->
     <span
-      class="font-mono text-cream-100/30 uppercase tracking-[0.18em] text-[9px]
-             inline-block mb-11 pb-1.5"
+      class="text-cream-100/30 mb-11 inline-block pb-1.5 font-mono text-[9px] tracking-[0.18em] uppercase"
       style="border-bottom: 1px solid var(--color-border-2);"
     >
       {pain.eyebrow}
@@ -28,63 +22,58 @@ const { pain } = copy
 
     <!-- Preguntas -->
     <div class="flex flex-col">
-      {pain.questions.map((q, i) => (
-        <div
-          class="pain-question reveal-left"
-          style={`padding: 0 0 40px 22px; border-left: 1px solid var(--color-border); transition-delay: ${i * 140}ms;`}
-          data-index={i}
-        >
-          <p
-            class="font-head text-cream-200/85 leading-snug mb-2"
-            style="font-size: clamp(17px, 2.6vw, 26px); font-weight: 400;"
+      {
+        pain.questions.map((q, i) => (
+          <div
+            class="pain-question reveal-left"
+            style={`padding: 0 0 clamp(24px, 4vw, 40px) clamp(14px, 3vw, 22px); border-left: 1px solid var(--color-border); transition-delay: ${i * 140}ms;`}
+            data-index={i}
           >
-            {/* Separar el texto en dos partes para resaltar el énfasis */}
-            {q.h.replace(q.hEmphasis, '').trim()}
-            {' '}
-            <em class="text-cream-100 italic font-bold">{q.hEmphasis}</em>
-          </p>
-          <p class="text-[12px] text-cream-100/30 leading-relaxed max-w-[440px]">
-            {q.note}
-          </p>
-        </div>
-      ))}
+            <p
+              class="font-head text-cream-200/85 mb-2 leading-snug"
+              style="font-size: clamp(15px, 2.4vw, 26px); font-weight: 400;"
+            >
+              {q.h.replace(q.hEmphasis, '').trim()}{' '}
+              <em class="text-cream-100 font-bold italic">{q.hEmphasis}</em>
+            </p>
+            <p
+              class="font-body max-w-[440px] leading-relaxed"
+              style="font-size: clamp(11px, 1.3vw, 13px); color: rgba(242,237,230,0.30);"
+            >
+              {q.note}
+            </p>
+          </div>
+        ))
+      }
     </div>
 
     <!-- Punch line -->
     <div
       class="pain-punch reveal"
-      style="border-top: 1px solid var(--color-border); padding-top: 36px; transition-delay: 480ms;"
+      style="border-top: 1px solid var(--color-border); padding-top: clamp(24px, 4vw, 36px); transition-delay: 480ms;"
     >
-      <p
-        class="font-head italic text-cream-100 mb-5"
-        style="font-size: clamp(17px, 2.4vw, 24px);"
-      >
+      <p class="font-head text-cream-100 mb-5 italic" style="font-size: clamp(15px, 2.2vw, 24px);">
         {pain.punch}
         {' '}
-        <em class="text-brand-red not-italic font-bold">{pain.punchEmphasis}</em>
+        <em class="text-brand-red font-bold not-italic">{pain.punchEmphasis}</em>
       </p>
-      
-       <a href={pain.punchCtaHref}
-        class="group inline-flex items-center gap-2 text-[13px] text-cream-100/65
-               transition-colors duration-200 hover:text-cream-100"
-      >
-        {pain.punchCta}
-        <span class="inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
-      </a>
-    </div>
 
+    <a  href={pain.punchCtaHref}
+      class="group inline-flex items-center gap-2 font-body text-cream-100/65 transition-colors duration-200
+      hover:text-cream-100" style="font-size: clamp(12px, 1.3vw, 13px);" >
+      {pain.punchCta}
+      <span class="inline-block transition-transform duration-200 group-hover:translate-x-1">→</span
+      >
+    </div>
   </div>
 </section>
 
 <script>
-  // IntersectionObserver local — sin dependencia de utils
-  // Activa .is-visible en .reveal-left y .reveal al entrar en viewport
   const io = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-visible')
-          // Bordes rojos en las preguntas al activarse
           const el = entry.target as HTMLElement
           if (el.classList.contains('pain-question')) {
             el.style.borderLeftColor = 'var(--color-brand-red)'
@@ -93,10 +82,8 @@ const { pain } = copy
         }
       })
     },
-    { threshold: 0.15 }
+    { threshold: 0.12 }
   )
 
-  document
-    .querySelectorAll('#dolor .reveal-left, #dolor .reveal')
-    .forEach((el) => io.observe(el))
+  document.querySelectorAll('#dolor .reveal-left, #dolor .reveal').forEach((el) => io.observe(el))
 </script>
