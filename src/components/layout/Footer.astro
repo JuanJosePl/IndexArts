@@ -2,55 +2,34 @@
 import { copy } from '@/data/copy'
 
 const { footer, nav, finalCta } = copy
+
+const WA_HREF = `https://wa.me/573001234567?text=${encodeURIComponent('Hola IndexArts, quiero el diagnóstico gratuito.')}`
 ---
 
-<!--
-  Footer IndexArts v6 — Curtain reveal effect (CSS puro, sin GSAP).
-  El wrapper tiene clip-path; el footer interno es fixed al bottom.
-  Al hacer scroll hasta el final, el clip-path lo revela gradualmente.
--->
-
-<!-- Marquee CSS + Keyframes -->
 <style>
   @keyframes ia-marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
   }
 
   .ia-marquee-track {
     animation: ia-marquee 36s linear infinite;
   }
-
   .ia-marquee-track:hover {
     animation-play-state: paused;
   }
 
-  @keyframes ia-heartbeat {
-    0%, 100% { transform: scale(1); opacity: 0.7; }
-    20%       { transform: scale(1.35); opacity: 1; }
-    40%       { transform: scale(1); opacity: 0.7; }
-    60%       { transform: scale(1.2); opacity: 1; }
-  }
-
-  .ia-heartbeat {
-    animation: ia-heartbeat 2.4s cubic-bezier(0.25,1,0.5,1) infinite;
-    display: inline-block;
-  }
-
-  /* Curtain reveal */
-  .ia-footer-curtain {
-    clip-path: polygon(0% 0, 100% 0%, 100% 100%, 0 100%);
-  }
-
-  /* Back to top hover */
   .ia-back-top svg {
-    transition: transform 250ms cubic-bezier(0.16,1,0.3,1);
+    transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   .ia-back-top:hover svg {
     transform: translateY(-4px);
   }
 
-  /* Link hover line */
   .ia-footer-link {
     position: relative;
   }
@@ -61,190 +40,396 @@ const { footer, nav, finalCta } = copy
     left: 0;
     width: 0;
     height: 1px;
-    background: #C0392B;
-    transition: width 300ms cubic-bezier(0.16,1,0.3,1);
+    background: #c0392b;
+    transition: width 300ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   .ia-footer-link:hover::after {
     width: 100%;
   }
 
-  /* Giant BG text */
   .ia-bg-text {
-    font-size: clamp(80px, 18vw, 240px);
-    line-height: 0.8;
+    font-size: clamp(56px, 14vw, 200px);
+    line-height: 0.85;
     font-weight: 900;
     letter-spacing: -0.04em;
     color: transparent;
-    -webkit-text-stroke: 1px rgba(242,237,230,0.04);
+    -webkit-text-stroke: 1px rgba(242, 237, 230, 0.04);
     user-select: none;
     pointer-events: none;
     white-space: nowrap;
+    overflow: hidden;
+    max-width: 100%;
+  }
+
+  /* ── Footer contenedor ── */
+  .ia-footer {
+    background-color: #0c0c0c;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── Marquee ── */
+  .ia-marquee-wrap {
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-block: 13px;
+    flex-shrink: 0;
+  }
+
+  /* ── Centro CTA ── */
+  .ia-footer-center {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: clamp(48px, 9vw, 96px) clamp(16px, 6vw, 48px);
+    flex: 1;
+    overflow: hidden;
+    gap: clamp(24px, 4vw, 40px);
+  }
+
+  /* Texto INDEXARTS de fondo — absoluto, no corta el layout */
+  .ia-footer-bg-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(18%);
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .ia-footer-center > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Heading ── */
+  .ia-footer-eyebrow {
+    font-family: var(--font-mono);
+    font-size: clamp(8px, 1.1vw, 11px);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(242, 237, 230, 0.4);
+    margin-bottom: clamp(12px, 2vw, 20px);
+  }
+
+  .ia-footer-h2 {
+    font-family: var(--font-head);
+    font-size: clamp(2rem, 7vw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--color-cream-100, #f2ede6);
+    margin: 0;
+  }
+
+  .ia-footer-h2 em {
+    color: var(--color-brand-red, #c0392b);
+    font-style: normal;
+  }
+
+  /* ── CTA button ── */
+  .ia-footer-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-body);
+    font-size: clamp(12px, 1.3vw, 14px);
+    font-weight: 600;
+    color: var(--color-cream-100, #f2ede6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: clamp(12px, 1.8vw, 14px) clamp(20px, 3vw, 28px);
+    text-decoration: none;
+    transition:
+      border-color 0.3s ease,
+      background 0.3s ease;
+    min-height: 48px;
+  }
+
+  .ia-footer-cta:hover {
+    border-color: rgba(192, 57, 43, 0.5);
+    background: rgba(192, 57, 43, 0.06);
+  }
+
+  .ia-footer-cta svg {
+    color: var(--color-brand-red, #c0392b);
+    flex-shrink: 0;
+  }
+
+  .ia-footer-cta-arrow {
+    color: rgba(242, 237, 230, 0.3);
+    transition:
+      color 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .ia-footer-cta:hover .ia-footer-cta-arrow {
+    color: var(--color-brand-red, #c0392b);
+    transform: translateX(3px);
+  }
+
+  /* ── Trust signals ── */
+  .ia-trust-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 24px;
+  }
+
+  .ia-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: clamp(9px, 1vw, 11px);
+    color: rgba(242, 237, 230, 0.35);
+    line-height: 1.4;
+  }
+
+  .ia-trust-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── Bottom bar ── */
+  .ia-footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: clamp(16px, 2.5vw, 20px) clamp(16px, 5vw, 32px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 640px) {
+    .ia-footer-bottom {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .ia-footer-logo {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: clamp(14px, 1.6vw, 18px);
+    color: rgba(242, 237, 230, 0.6);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    letter-spacing: -0.01em;
+  }
+  .ia-footer-logo:hover {
+    color: var(--color-cream-100, #f2ede6);
+  }
+  .ia-footer-logo span {
+    color: var(--color-brand-red, #c0392b);
+  }
+
+  .ia-footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px 20px;
+  }
+
+  .ia-footer-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .ia-copyright {
+    font-family: var(--font-mono);
+    font-size: clamp(8px, 0.9vw, 10px);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(242, 237, 230, 0.25);
+    white-space: nowrap;
+  }
+
+  .ia-back-top {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: transparent;
+    color: rgba(242, 237, 230, 0.4);
+    cursor: pointer;
+    transition:
+      border-color 0.3s ease,
+      color 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .ia-back-top:hover {
+    border-color: rgba(192, 57, 43, 0.4);
+    color: var(--color-cream-100, #f2ede6);
+  }
+
+  /* Mobile: ocultar links del footer en pantallas muy pequeñas, dejar solo email */
+  @media (max-width: 480px) {
+    .ia-footer-nav-link-secondary {
+      display: none;
+    }
   }
 </style>
 
-<!-- Curtain wrapper — height determina cuánto scroll necesita el usuario -->
-<div class="ia-footer-curtain relative h-screen w-full" aria-label="Pie de página">
-
-  <footer
-    class="fixed bottom-0 left-0 w-full h-screen flex flex-col justify-between overflow-hidden bg-ink-950"
-    style="border-top: 1px solid rgba(255,255,255,0.06);"
-  >
-
-    <!-- ── Marquee ───────────────────────────────────────────── -->
+<footer class="ia-footer" aria-label="Pie de página">
+  <!-- ── Marquee ── -->
+  <div class="ia-marquee-wrap" aria-hidden="true">
     <div
-      class="w-full overflow-hidden border-b"
-      style="border-color: rgba(255,255,255,0.06); padding-block: 14px;"
-      aria-hidden="true"
+      class="ia-marquee-track"
+      style="display:flex; width:max-content; align-items:center; gap:0;"
     >
-      <div class="ia-marquee-track flex w-max items-center gap-0">
-        <!-- Bloque 1 -->
-        <div class="flex items-center gap-10 px-8 font-mono text-xs tracking-[0.25em] uppercase text-cream-100/28">
-          <span>Webs que venden</span>
-          <span class="text-brand-red">✦</span>
-          <span>Automatizaciones 24/7</span>
-          <span class="text-brand-red/40">✦</span>
-          <span>Garantía 60 días</span>
-          <span class="text-brand-red">✦</span>
-          <span>Barranquilla · Colombia</span>
-          <span class="text-brand-red/40">✦</span>
-          <span>Sistemas que escalan</span>
-          <span class="text-brand-red">✦</span>
-          <span>Resultados en COP real</span>
-          <span class="text-brand-red/40">✦</span>
-        </div>
-        <!-- Bloque 2 (espejo para loop infinito) -->
-        <div class="flex items-center gap-10 px-8 font-mono text-xs tracking-[0.25em] uppercase text-cream-100/28" aria-hidden="true">
-          <span>Webs que venden</span>
-          <span class="text-brand-red">✦</span>
-          <span>Automatizaciones 24/7</span>
-          <span class="text-brand-red/40">✦</span>
-          <span>Garantía 60 días</span>
-          <span class="text-brand-red">✦</span>
-          <span>Barranquilla · Colombia</span>
-          <span class="text-brand-red/40">✦</span>
-          <span>Sistemas que escalan</span>
-          <span class="text-brand-red">✦</span>
-          <span>Resultados en COP real</span>
-          <span class="text-brand-red/40">✦</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── Centro — CTA + links ──────────────────────────────── -->
-    <div class="relative flex flex-1 flex-col items-center justify-center px-6 overflow-hidden">
-
-      <!-- Texto gigante de fondo -->
       <div
-        class="ia-bg-text absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[15%] reveal"
-        aria-hidden="true"
+        style="display:flex; align-items:center; gap:40px; padding:0 32px; font-family:var(--font-mono); font-size:11px; letter-spacing:0.25em; text-transform:uppercase; color:rgba(242,237,230,0.28);"
       >
-        INDEXARTS
+        <span>Webs que venden</span>
+        <span style="color:#C0392B;">✦</span>
+        <span>Automatizaciones 24/7</span>
+        <span style="color:rgba(192,57,43,0.4);">✦</span>
+        <span>Garantía 60 días</span>
+        <span style="color:#C0392B;">✦</span>
+        <span>Barranquilla · Colombia</span>
+        <span style="color:rgba(192,57,43,0.4);">✦</span>
+        <span>Sistemas que escalan</span>
+        <span style="color:#C0392B;">✦</span>
+        <span>Resultados en COP real</span>
+        <span style="color:rgba(192,57,43,0.4);">✦</span>
       </div>
-
-      <!-- Contenido real -->
-      <div class="relative z-10 flex flex-col items-center text-center gap-10 reveal">
-
-        <!-- Heading principal -->
-        <div>
-          <p class="font-mono text-xs tracking-[0.2em] uppercase text-cream-100/40 mb-4">
-            {finalCta.eyebrow}
-          </p>
-          <h2 class="font-head text-4xl md:text-6xl text-cream-100 leading-[0.95] tracking-tight">
-            {finalCta.h2.line1}<br />
-            <em class="text-brand-red not-italic">{finalCta.h2.emphasis}</em><br />
-            {finalCta.h2.line3}
-          </h2>
-        </div>
-
-        <!-- CTA WhatsApp -->
-        
-         <a href={`https://wa.me/573001234567?text=${encodeURIComponent('Hola IndexArts, quiero el diagnóstico gratuito.')}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="
-            inline-flex items-center gap-3
-            font-body font-semibold text-sm
-            text-cream-100
-            border border-white/[0.12] hover:border-brand-red/50
-            px-7 py-3.5
-            transition-all duration-300
-            group
-          "
-        >
-          <!-- WhatsApp SVG -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="text-brand-red flex-shrink-0">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-          </svg>
-          {finalCta.cta}
-          <span class="text-cream-100/30 group-hover:text-brand-red transition-colors duration-300">→</span>
-        </a>
-
-        <!-- Trust signals -->
-        <div class="flex flex-wrap justify-center gap-x-8 gap-y-2">
-          {finalCta.trust.map(item => (
-            <span class="font-mono text-xs text-cream-100/35 flex items-center gap-2">
-              <span
-                class={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                  item.dot === 'green' ? 'bg-brand-green' : 'bg-cream-100/20'
-                }`}
-              ></span>
-              {item.text}
-            </span>
-          ))}
-        </div>
-
+      <!-- Bloque espejo para loop infinito -->
+      <div
+        aria-hidden="true"
+        style="display:flex; align-items:center; gap:40px; padding:0 32px; font-family:var(--font-mono); font-size:11px; letter-spacing:0.25em; text-transform:uppercase; color:rgba(242,237,230,0.28);"
+      >
+        <span>Webs que venden</span>
+        <span style="color:#C0392B;">✦</span>
+        <span>Automatizaciones 24/7</span>
+        <span style="color:rgba(192,57,43,0.4);">✦</span>
+        <span>Garantía 60 días</span>
+        <span style="color:#C0392B;">✦</span>
+        <span>Barranquilla · Colombia</span>
+        <span style="color:rgba(192,57,43,0.4);">✦</span>
+        <span>Sistemas que escalan</span>
+        <span style="color:#C0392B;">✦</span>
+        <span>Resultados en COP real</span>
+        <span style="color:rgba(192,57,43,0.4);">✦</span>
       </div>
     </div>
+  </div>
 
-    <!-- ── Bottom bar ────────────────────────────────────────── -->
-    <div
-      class="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-4 px-8 py-5"
-      style="border-top: 1px solid rgba(255,255,255,0.06);"
+  <!-- ── Centro — CTA principal ── -->
+  <div class="ia-footer-center">
+    <!-- INDEXARTS de fondo -->
+    <div class="ia-footer-bg-wrap" aria-hidden="true">
+      <div class="ia-bg-text">INDEXARTS</div>
+    </div>
+
+    <!-- Heading -->
+    <div>
+      <p class="ia-footer-eyebrow">{finalCta.eyebrow}</p>
+      <h2 class="ia-footer-h2">
+        {finalCta.h2.line1}<br />
+        <em>{finalCta.h2.emphasis}</em>
+        {
+          finalCta.h2.line3 && (
+            <>
+              <br />
+              {finalCta.h2.line3}
+            </>
+          )
+        }
+      </h2>
+    </div>
+
+    <!-- CTA WhatsApp -->
+
+  <a  href={WA_HREF}
+    target="_blank" rel="noopener noreferrer" class="ia-footer-cta" aria-label="Abrir WhatsApp con IndexArts"
     >
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path
+        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.841.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+      ></path>
+    </svg>
+    {finalCta.cta}
+    <span class="ia-footer-cta-arrow">→</span>
+  </div>
 
-      <!-- Logo -->
-      <a href="/" class="font-body font-semibold text-sm text-cream-100/60 hover:text-cream-100 transition-colors duration-200">
-        Index<span class="text-brand-red">{footer.logoAccent}</span>
-      </a>
+  <!-- Trust signals -->
+  <div class="ia-trust-list" role="list">
+    {
+      finalCta.trust.map((item) => (
+        <span class="ia-trust-item" role="listitem">
+          <span
+            class="ia-trust-dot"
+            aria-hidden="true"
+            style={`background: ${item.dot === 'green' ? 'var(--color-brand-green, #0B7A45)' : 'rgba(242,237,230,0.20)'};`}
+          />
+          {item.text}
+        </span>
+      ))
+    }
+  </div>
+</footer>
 
-      <!-- Links -->
-      <nav class="flex items-center gap-6" aria-label="Links del footer">
-        {nav.links.map(link => (
-          
-          <a  href={link.href}
-            class="ia-footer-link font-body text-xs text-cream-100/40 hover:text-cream-100 transition-colors duration-200"
-          >
-            {link.label}
-          </a>
-        ))}
-        
-         <a href={`mailto:hola@indexarts.co`}
-          class="ia-footer-link font-mono text-xs text-cream-100/30 hover:text-cream-100/70 transition-colors duration-200"
+<!-- ── Bottom bar ── -->
+<div class="ia-footer-bottom">
+  <!-- Logo -->
+  <a href="/" class="ia-footer-logo">
+    Index<span>{footer.logoAccent}</span>
+  </a>
+
+  <!-- Links -->
+  <nav class="ia-footer-nav" aria-label="Links del footer">
+    {
+      nav.links.map((link) => (
+        <a
+          href={link.href}
+          class="ia-footer-link ia-footer-nav-link-secondary font-body text-cream-100/40 hover:text-cream-100 transition-colors duration-200"
+          style="font-size: clamp(10px, 1.1vw, 12px);"
         >
-          hola@indexarts.co
+          {link.label}
         </a>
-      </nav>
+      ))
+    }
 
-      <!-- Copyright + back to top -->
-      <div class="flex items-center gap-5">
-        <p class="font-mono text-[10px] tracking-widest uppercase text-cream-100/25">
-          {footer.copyright}
-        </p>
+   <a href="mailto:hola@indexarts.co" class="ia-footer-link font-mono text-cream-100/30
+    hover:text-cream-100/70 transition-colors duration-200" style="font-size: clamp(9px, 1vw,
+    11px);" > hola@indexarts.co
+  </nav>
+</div>
 
-        <button
-          id="ia-back-top"
-          class="ia-back-top w-9 h-9 flex items-center justify-center border border-white/[0.08] hover:border-brand-red/40 text-cream-100/40 hover:text-cream-100 transition-all duration-300"
-          aria-label="Volver al inicio"
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M7 11V3M3 6l4-4 4 4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
-
-    </div>
-
-  </footer>
+<!-- Copyright + back to top -->
+<div class="ia-footer-right">
+  <p class="ia-copyright">{footer.copyright}</p>
+  <button id="ia-back-top" class="ia-back-top" aria-label="Volver al inicio">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+    >
+      <path d="M7 11V3M3 6l4-4 4 4" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </button>
 </div>
 
 <script>

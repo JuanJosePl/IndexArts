@@ -5,17 +5,20 @@ const { nav } = copy
 ---
 
 <!--
-  Nav IndexArts v6 — colapsa a píldora angosta al bajar, se expande al subir.
-  Sin framer-motion — CSS transitions + JS vanilla (passive scroll).
+  Nav IndexArts — pill colapsable al scroll.
+  Mobile: logo + CTA directo, sin links (están en el menú mobile).
+  Desktop: pill completa con collapse/expand por scroll.
 -->
 <header
   id="ia-nav"
-  class="fixed top-0 left-0 right-0 z-[100] flex justify-center pt-5 pointer-events-none"
+  class="fixed top-0 left-0 right-0 z-[100] flex justify-center pt-4 md:pt-5 pointer-events-none"
   aria-label="Navegación principal"
 >
+  <!-- ── DESKTOP NAV (≥ 640px) ── -->
   <nav
     id="ia-nav-pill"
     class="
+      nav-desktop
       pointer-events-auto
       flex items-center gap-0
       h-12 overflow-hidden
@@ -25,106 +28,114 @@ const { nav } = copy
     "
     style="transition: width 500ms cubic-bezier(0.16,1,0.3,1), border-radius 500ms cubic-bezier(0.16,1,0.3,1);"
     role="navigation"
+    aria-label="Menú principal"
   >
-
     <!-- Logo -->
     
-      <a href="/"
+    <a  href="/"
       id="ia-nav-logo"
-      class="
-        flex-shrink-0 flex items-center gap-0
-        pl-5 pr-4
-        font-body font-semibold text-sm tracking-wide text-cream-100
-        nav-item-visible
-      "
+      class="flex-shrink-0 flex items-center pl-5 pr-4 font-body font-semibold text-sm tracking-wide text-cream-100 nav-item-visible"
       aria-label="IndexArts — Inicio"
     >
       Index<span class="text-brand-red">{nav.logoAccent}</span>
     </a>
 
-    <!-- Separador vertical -->
-    <span
-      id="ia-nav-sep"
-      class="w-px h-4 bg-white/10 flex-shrink-0 nav-item-visible"
-      aria-hidden="true"
-    ></span>
+    <!-- Sep -->
+    <span id="ia-nav-sep" class="w-px h-4 bg-white/10 flex-shrink-0 nav-item-visible" aria-hidden="true"></span>
 
     <!-- Links -->
-    <div
-      id="ia-nav-links"
-      class="flex items-center gap-1 px-3 nav-item-visible"
-      role="list"
-    >
-{nav.links.map(link => (
-  
-    <a href={link.href}
-    role="listitem"
-    class="
-      font-body text-sm text-cream-200/65 hover:text-cream-100
-      px-3 py-1.5
-      transition-colors duration-200
-      whitespace-nowrap
-    "
-  >
-    {link.label}
-  </a>
-))}
+    <div id="ia-nav-links" class="flex items-center gap-1 px-3 nav-item-visible" role="list">
+      {nav.links.map(link => (
+        
+         <a href={link.href}
+          role="listitem"
+          class="font-body text-sm text-cream-200/65 hover:text-cream-100 px-3 py-1.5 transition-colors duration-200 whitespace-nowrap"
+        >
+          {link.label}
+        </a>
+      ))}
     </div>
 
-    <!-- Separador vertical -->
-    <span
-      class="w-px h-4 bg-white/10 flex-shrink-0 nav-item-visible"
-      id="ia-nav-sep2"
-      aria-hidden="true"
-    ></span>
+    <!-- Sep -->
+    <span id="ia-nav-sep2" class="w-px h-4 bg-white/10 flex-shrink-0 nav-item-visible" aria-hidden="true"></span>
 
     <!-- CTA -->
     <div id="ia-nav-cta" class="px-3 nav-item-visible">
       
-       <a href={nav.ctaHref}
-        class="
-          font-body text-sm font-medium
-          text-brand-red hover:text-brand-red2
-          px-3 py-1.5
-          border border-brand-red/30 hover:border-brand-red/60
-          transition-all duration-200
-          whitespace-nowrap
-        "
+      <a  href={nav.ctaHref}
+        class="font-body text-sm font-medium text-brand-red hover:text-brand-red2 px-3 py-1.5 border border-brand-red/30 hover:border-brand-red/60 transition-all duration-200 whitespace-nowrap"
       >
         {nav.cta}
       </a>
     </div>
 
-    <!-- Ícono colapsado (visible solo cuando pill está cerrada) -->
+    <!-- Ícono colapsado -->
     <div
       id="ia-nav-icon"
-      class="
-        absolute inset-0 flex items-center justify-center
-        nav-icon-hidden
-      "
+      class="absolute inset-0 flex items-center justify-center nav-icon-hidden"
       aria-hidden="true"
     >
-      <svg width="18" height="12" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none">
         <rect width="18" height="1.5" rx="0.75" fill="#F2EDE6" opacity="0.85"/>
         <rect y="5.25" width="12" height="1.5" rx="0.75" fill="#F2EDE6" opacity="0.85"/>
         <rect y="10.5" width="6" height="1.5" rx="0.75" fill="#C0392B"/>
       </svg>
     </div>
-
   </nav>
+
+  <!-- ── MOBILE NAV (< 640px) ── -->
+  <div
+    class="nav-mobile pointer-events-auto flex items-center justify-between w-full mx-4"
+    style="
+      height: 48px;
+      background: rgba(12,12,12,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 0 16px;
+      transition: background 0.3s ease;
+    "
+  >
+    <!-- Logo mobile -->
+    
+      href="/"
+      class="font-body font-semibold text-sm tracking-wide text-cream-100"
+      aria-label="IndexArts — Inicio"
+    >
+      Index<span class="text-brand-red">{nav.logoAccent}</span>
+    </a>
+
+    <!-- CTA mobile — directo, sin menú -->
+    
+      href={nav.ctaHref}
+      class="font-body text-xs font-medium text-brand-red border border-brand-red/30 px-3 py-2 transition-all duration-200 active:bg-brand-red/10"
+      style="min-height: 36px; display: flex; align-items: center;"
+    >
+      {nav.cta}
+    </a>
+  </div>
 </header>
 
 <style>
-  /* ── Estado expandido ───────────────────────────────── */
+  /* ── Desktop pill — solo ≥ 640px ── */
+  .nav-desktop { display: none; }
+  .nav-mobile  { display: flex; }
+
+  @media (min-width: 640px) {
+    .nav-desktop { display: flex; }
+    .nav-mobile  { display: none; }
+  }
+
+  /* ── Estado expandido ── */
   #ia-nav-pill.nav-pill-expanded {
     width: auto;
-    min-width: 520px;
+    min-width: 460px;
     max-width: 780px;
-    border-radius: 0px; /* cuadrado IndexArts — sin rounded excesivo */
+    border-radius: 0;
     position: relative;
   }
 
-  /* ── Estado colapsado ───────────────────────────────── */
+  /* ── Estado colapsado ── */
   #ia-nav-pill.nav-pill-collapsed {
     width: 3rem;
     min-width: 3rem;
@@ -133,7 +144,7 @@ const { nav } = copy
     position: relative;
   }
 
-  /* ── Items: visibles / ocultos ──────────────────────── */
+  /* ── Items visibles/ocultos ── */
   .nav-item-visible {
     opacity: 1;
     transform: translateX(0);
@@ -152,7 +163,7 @@ const { nav } = copy
       transform 180ms ease;
   }
 
-  /* ── Ícono hamburguesa ─────────────────────────────── */
+  /* ── Ícono hamburguesa ── */
   #ia-nav-icon.nav-icon-hidden {
     opacity: 0;
     transition: opacity 180ms ease;
@@ -165,13 +176,13 @@ const { nav } = copy
     pointer-events: none;
   }
 
-  /* ── Border-bottom al hacer scroll (expandido) ─────── */
+  /* ── Scrolled state ── */
   #ia-nav-pill.nav-scrolled {
     border-color: rgba(255,255,255,0.09);
     background-color: rgba(12,12,12,0.92);
   }
 
-  /* ── Hover en colapsado ────────────────────────────── */
+  /* ── Hover en colapsado ── */
   #ia-nav-pill.nav-pill-collapsed:hover {
     transform: scale(1.06);
     transition:
@@ -179,38 +190,47 @@ const { nav } = copy
       width 500ms cubic-bezier(0.16,1,0.3,1),
       border-radius 500ms cubic-bezier(0.16,1,0.3,1);
   }
+
+  /* ── Mobile scrolled — fondo más opaco ── */
+  .nav-mobile.nav-scrolled-mobile {
+    background: rgba(12,12,12,0.96) !important;
+    border-color: rgba(255,255,255,0.09) !important;
+  }
 </style>
 
 <script>
   (function () {
-    const pill    = document.getElementById('ia-nav-pill')!
-    const logo    = document.getElementById('ia-nav-logo')!
-    const sep1    = document.getElementById('ia-nav-sep')!
-    const sep2    = document.getElementById('ia-nav-sep2')!
-    const links   = document.getElementById('ia-nav-links')!
-    const cta     = document.getElementById('ia-nav-cta')!
-    const icon    = document.getElementById('ia-nav-icon')!
+    // ── Desktop pill ──────────────────────────────────────────────
+    const pill  = document.getElementById('ia-nav-pill')
+    const logo  = document.getElementById('ia-nav-logo')
+    const sep1  = document.getElementById('ia-nav-sep')
+    const sep2  = document.getElementById('ia-nav-sep2')
+    const links = document.getElementById('ia-nav-links')
+    const cta   = document.getElementById('ia-nav-cta')
+    const icon  = document.getElementById('ia-nav-icon')
+
+    // ── Mobile bar ────────────────────────────────────────────────
+    const mobileBar = document.querySelector('.nav-mobile') as HTMLElement | null
+
+    if (!pill || !logo || !sep1 || !sep2 || !links || !cta || !icon) return
 
     const ITEMS = [logo, sep1, links, sep2, cta]
 
     let isExpanded  = true
     let lastScrollY = 0
     let collapseAt  = 0
-    const EXPAND_DELTA = 80   // px hacia arriba para re-expandir
+    const EXPAND_DELTA = 80
 
     function collapse() {
       if (!isExpanded) return
       isExpanded = false
       collapseAt = window.scrollY
-
       pill.classList.remove('nav-pill-expanded')
       pill.classList.add('nav-pill-collapsed')
-
       ITEMS.forEach(el => {
         el.classList.remove('nav-item-visible')
         el.classList.add('nav-item-hidden')
       })
-
       icon.classList.remove('nav-icon-hidden')
       icon.classList.add('nav-icon-visible')
     }
@@ -218,20 +238,16 @@ const { nav } = copy
     function expand() {
       if (isExpanded) return
       isExpanded = true
-
       pill.classList.remove('nav-pill-collapsed')
       pill.classList.add('nav-pill-expanded')
-
       ITEMS.forEach(el => {
         el.classList.remove('nav-item-hidden')
         el.classList.add('nav-item-visible')
       })
-
       icon.classList.remove('nav-icon-visible')
       icon.classList.add('nav-icon-hidden')
     }
 
-    // Click en pill colapsada → expandir
     pill.addEventListener('click', (e) => {
       if (!isExpanded) {
         e.preventDefault()
@@ -239,12 +255,11 @@ const { nav } = copy
       }
     })
 
-    // Scroll handler
     window.addEventListener('scroll', () => {
       const current = window.scrollY
 
-      // Scrolled style
       pill.classList.toggle('nav-scrolled', current > 40)
+      mobileBar?.classList.toggle('nav-scrolled-mobile', current > 40)
 
       if (isExpanded && current > lastScrollY && current > 150) {
         collapse()
