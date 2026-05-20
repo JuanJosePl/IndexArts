@@ -1,11 +1,5 @@
 /**
  * data/adapters/mock.ts
- *
- * Adaptador mock — implementa DataStore con arrays en memoria.
- * Para migrar a un CMS: crear data/adapters/cms.ts con la misma interfaz
- * y cambiar la importación en data/index.ts. Ningún componente se toca.
- *
- * [ISSUE-4] Adapters pattern — swap a CMS sin tocar componentes.
  */
 import type {
   DataStore,
@@ -228,7 +222,7 @@ const sectors: CalcSector[] = [
     calculate: (values) => {
       const visitas = values['visitas'] ?? 2000
       const actual  = (values['conv']   ?? 1.2) / 100
-      const target  = 0.04 // objetivo de conversión: 4%
+      const target  = 0.04
       const ticket  = values['ticket']  ?? 85000
       return Math.round(visitas * (target - actual) * ticket)
     },
@@ -253,8 +247,7 @@ const heroMetrics: MetricItem[] = [
   },
 ]
 
-// ─── Métricas Transición (sección #trans) ────────────────────────────────────
-// Estas alimentan AnimatedStats — los valores numéricos para el counter animado
+// ─── Métricas Transición ─────────────────────────────────────────────────────
 
 const transitionStats: MetricItem[] = [
   {
@@ -263,7 +256,7 @@ const transitionStats: MetricItem[] = [
     context: 'Clínica · Bquilla · Ene–Mar 2026',
   },
   {
-    value: '11.8',      // el island formatea como $11.8M
+    value: '11.8',
     label: 'ahorrados en comisiones',
     context: 'Restaurante · primer trimestre',
   },
@@ -275,7 +268,6 @@ const transitionStats: MetricItem[] = [
 ]
 
 // ─── Proyectos ────────────────────────────────────────────────────────────────
-// Añadir después del array de cases
 
 const projects: ProjectItem[] = [
   {
@@ -332,8 +324,8 @@ const projects: ProjectItem[] = [
 
 function makeSource<T extends { id: string }>(items: T[]) {
   return {
-    getAll:   async () => items,
-    getById:  async (id: string) => items.find((i) => i.id === id),
+    getAll:  async () => items,
+    getById: async (id: string) => items.find((i) => i.id === id),
   }
 }
 
